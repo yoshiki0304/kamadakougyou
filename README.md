@@ -1,28 +1,24 @@
-# 鎌田工業株式会社 Webサイト
+# 鎌田工業株式会社 Web Site
 
-GitHub Pages等の静的ホスティングで公開できる5ページ構成のWebサイトです。
+GitHub Pages向けの静的サイトです。
 
 ## ページ
-- `index.html` - トップページ
-- `company.html` - 会社概要
-- `services.html` - 事業・サービス紹介
-- `contact.html` - お問い合わせ
-- `karaoke.html` - 大樹悟朗のカラオケファンの皆様へ
+- `index.html` — トップページ
+- `company.html` — 会社概要
+- `services.html` — 事業・サービス紹介
+- `contact.html` — お問い合わせ
+- `karaoke.html` — 大樹悟朗のファンサイト
 
-## 公開方法（GitHub Pages）
-1. GitHubで新規リポジトリを作成
-2. このフォルダ内のファイルをそのままアップロード
-3. GitHubの `Settings` → `Pages`
-4. `Build and deployment` の Source を `Deploy from a branch` に設定
-5. Branch を `main`、Folder を `/(root)` にして保存
+## デザイン
+- メインカラー：明るい水色
+- サブカラー：黄色
+- 社名をロゴ代わりにしたテキストブランド
+- スクロールリビール、パララックス、横スクロール文字、ページ上部の進捗バー等を実装
+- PC / タブレット / スマートフォン対応
 
-## お問い合わせフォーム
-静的サイト用に、入力内容から `mailto:` を生成して端末のメールソフトを開く方式です。
-送信をWeb上で完結させたい場合は Formspree / Google Apps Script / 独自API等への差し替えが必要です。
+## 写真
+大樹悟朗ファンサイトの4枚はユーザー提供画像を `assets/img/` に格納しています。
+解体現場の写真はUnsplashの公開画像を外部URLで表示しています。実際の施工写真が用意できた場合は差し替えを推奨します。
 
-## 編集箇所
-- 色・レイアウト: `assets/css/style.css`
-- メニュー・フォーム挙動: `assets/js/main.js`
-- ロゴマーク: `assets/img/logo-mark.svg`
-- TOPイラスト: `assets/img/hero-illustration.svg`
-- カラオケページイラスト: `assets/img/karaoke-illustration.svg`
+## GitHub Pages
+Repository > Settings > Pages > Source で `Deploy from a branch` を選択し、公開対象ブランチ（通常 `main`）と `/ (root)` を選択して保存してください。
