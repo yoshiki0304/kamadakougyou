@@ -164,3 +164,183 @@ body.loaded .hero-media{opacity:1;transform:none}
   .page-hero{min-height:360px}.page-hero-inner{padding:54px 0}.page-title{font-size:clamp(44px,13vw,66px)}.page-accent{display:none}.data-table th,.data-table td{display:block;width:100%;padding:13px 8px}.data-table th{border-bottom:0;padding-bottom:3px}.data-table td{padding-top:2px}.service-feature-copy{padding:38px 24px}.service-list{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.contact-side,.contact-card{padding:28px 22px}.form-row{grid-template-columns:1fr}.fan-hero-grid{padding:50px 0}.fan-hero-copy h1{font-size:clamp(50px,16vw,70px)}.fan-portrait-wrap{padding:24px 24px 0 0}.fan-portrait{height:430px}.fan-portrait-wrap::before{width:110px;height:110px}.fan-portrait-wrap::after{display:none}.gallery-grid{display:grid;grid-template-columns:1fr;grid-template-rows:none}.gallery-item,.gallery-item:first-child,.gallery-item:nth-child(4){grid-column:auto;grid-row:auto;height:310px}.gallery-item:nth-child(2){height:420px}.footer-top{grid-template-columns:1fr}.footer-top>div:first-child{grid-column:auto}.footer-bottom{flex-direction:column}.to-top{width:44px;height:44px;right:14px;bottom:14px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.hero-line>span{transform:none}.hero-description,.hero-actions,.hero-media,.reveal{opacity:1;transform:none}.reveal-clip{clip-path:none}}
+
+/* =========================================================
+   2026-09-24 Gradient / spacing refinement
+   Reference gradient: deep sky blue -> bright aqua blue
+   ========================================================= */
+:root{
+  --gradient-top:#57a4e0;
+  --gradient-mid:#72cbed;
+  --gradient-bottom:#8cecff;
+  --glass:rgba(255,255,255,.90);
+  --glass-soft:rgba(245,252,255,.78);
+}
+
+/* The page background is the requested blue-to-aqua gradient. */
+body{
+  background:linear-gradient(180deg,var(--gradient-top) 0%,var(--gradient-mid) 42%,var(--gradient-bottom) 100%);
+  background-attachment:fixed;
+}
+main{
+  position:relative;
+  background:linear-gradient(180deg,var(--gradient-top) 0%,#69b9e7 13%,#7bd7f4 35%,var(--gradient-bottom) 62%,#7bd8f5 83%,var(--gradient-bottom) 100%);
+}
+
+/* Hero areas use the same gradient instead of large white fields. */
+.home-hero,
+.page-hero,
+.fan-hero{
+  background:linear-gradient(180deg,var(--gradient-top) 0%,#69b9e7 38%,var(--gradient-bottom) 100%);
+}
+.home-hero::before{
+  background:rgba(255,255,255,.13);
+}
+.page-hero::after{
+  border-color:rgba(255,255,255,.15);
+}
+
+/* Improve contrast directly on the blue background. */
+.home-hero .kicker,
+.page-hero .page-kicker,
+.page-hero .breadcrumb,
+.page-hero .breadcrumb a,
+.fan-hero .kicker{
+  color:#073f67;
+}
+.home-hero .hero-description,
+.page-hero .page-intro,
+.fan-hero .fan-hero-copy p{
+  color:#173f58;
+}
+
+/* Transparent / glass sections keep the gradient visible and remove hard blank bands. */
+.section{
+  padding:82px 0;
+  background:transparent;
+}
+.section-soft{
+  background:rgba(243,251,255,.76);
+  backdrop-filter:blur(6px);
+}
+.section-yellow{
+  background:linear-gradient(180deg,rgba(255,250,221,.88),rgba(255,255,255,.76));
+}
+.marquee{
+  background:rgba(255,255,255,.88);
+  border-color:rgba(255,255,255,.55);
+  backdrop-filter:blur(8px);
+}
+.service-card,
+.flow-item,
+.contact-card,
+.fan-teaser{
+  background:var(--glass);
+}
+.map-box{
+  background:rgba(245,252,255,.84);
+}
+
+/* Compress excessive vertical space while keeping a premium rhythm. */
+.home-hero{min-height:auto}
+.hero-grid{
+  min-height:650px;
+  gap:50px;
+  padding:48px 0 54px;
+}
+.hero-media{min-height:520px}
+.section-head{margin-bottom:40px}
+.service-card{
+  min-height:250px;
+  padding:34px 30px 30px;
+}
+.service-no{margin-bottom:34px}
+.photo-split{gap:52px}
+.photo-panel{min-height:440px}
+.fan-teaser{gap:42px;padding:22px}
+.fan-teaser-photo{min-height:330px}
+.fan-teaser-copy{padding:18px 22px 18px 0}
+.cta-band{padding:60px 0}
+
+/* Inner pages: remove oversized hero / section gaps. */
+.page-hero{
+  min-height:auto;
+}
+.page-hero-inner{
+  padding:52px 0 48px;
+}
+.company-grid{gap:52px}
+.data-table th,.data-table td{padding-top:18px;padding-bottom:18px}
+.map-box{margin-top:26px}
+.service-feature{
+  min-height:450px;
+}
+.service-feature-media{min-height:380px}
+.service-feature-copy{padding:50px}
+.flow-item{
+  min-height:175px;
+  padding:26px 23px;
+}
+.flow-item::before{margin-bottom:22px}
+.contact-layout{gap:42px}
+.contact-side,.contact-card{padding:36px}
+.fan-hero-grid{
+  min-height:auto;
+  gap:50px;
+  padding:54px 0;
+}
+.fan-portrait{height:470px}
+.fan-message{gap:44px}
+.site-footer{padding:58px 0 24px}
+.footer-top{padding-bottom:42px}
+
+/* Keep animation effects, but reveal content sooner so a user never scrolls into an empty-looking section. */
+.reveal,
+.reveal-clip{
+  will-change:transform,opacity,clip-path;
+}
+
+@media(max-width:980px){
+  .hero-grid{padding:54px 0 48px;gap:34px}
+  .hero-media{min-height:440px}
+  .section{padding:68px 0}
+  .photo-panel{min-height:400px}
+  .fan-teaser{gap:28px}
+  .fan-teaser-photo{min-height:300px}
+  .service-feature-copy{padding:40px 32px}
+  .fan-hero-grid{padding:46px 0;gap:34px}
+  .fan-portrait{height:440px}
+}
+
+@media(max-width:640px){
+  body{background-attachment:scroll}
+  .hero-grid{padding:42px 0 42px;gap:30px}
+  .hero-media{min-height:320px}
+  .hero-photo-frame{bottom:22px}
+  .section{padding:54px 0}
+  .section-head{margin-bottom:30px}
+  .service-card{padding:28px 22px;min-height:auto}
+  .service-no{margin-bottom:24px}
+  .photo-panel{min-height:300px}
+  .fan-teaser{padding:12px;gap:20px}
+  .fan-teaser-photo{min-height:285px}
+  .fan-teaser-copy{padding:10px 8px 10px}
+  .cta-band{padding:48px 0}
+  .page-hero{min-height:auto}
+  .page-hero-inner{padding:38px 0 36px}
+  .breadcrumb{margin-bottom:12px}
+  .page-title{margin-bottom:12px}
+  .company-grid{gap:34px}
+  .service-feature{min-height:auto}
+  .service-feature-media{min-height:300px}
+  .service-feature-copy{padding:34px 22px}
+  .flow-item{min-height:auto;padding:24px 20px}
+  .contact-layout{gap:26px}
+  .contact-side,.contact-card{padding:25px 20px}
+  .fan-hero-grid{padding:38px 0;gap:28px}
+  .fan-portrait{height:390px}
+  .fan-message{gap:24px}
+  .gallery-item,.gallery-item:first-child,.gallery-item:nth-child(4){height:280px}
+  .gallery-item:nth-child(2){height:360px}
+  .site-footer{padding-top:48px}
+}

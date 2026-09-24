@@ -40,7 +40,7 @@
           io.unobserve(entry.target);
         }
       });
-    }, {threshold: .13, rootMargin: '0px 0px -35px'});
+    }, {threshold: .01, rootMargin: '0px 0px 22% 0px'});
     revealEls.forEach(el => io.observe(el));
   } else {
     revealEls.forEach(el => el.classList.add('is-visible'));
