@@ -344,3 +344,282 @@ main{
   .gallery-item:nth-child(2){height:360px}
   .site-footer{padding-top:48px}
 }
+
+
+/* =========================================================
+   2026-09-24 Contrast / spacing / reveal stability refinement
+   - Remove the empty-looking band below inner-page heroes.
+   - Keep all key content visible even if JavaScript animation is delayed.
+   - Add yellow/white accents so text never disappears into the aqua gradient.
+   ========================================================= */
+
+/* Key content must never disappear completely before JS runs. */
+.reveal{
+  opacity:.72;
+  transform:translateY(16px);
+}
+.reveal.is-visible{
+  opacity:1;
+  transform:none;
+}
+.reveal-clip{
+  clip-path:inset(0 4% 0 0);
+  opacity:.72;
+  transition:clip-path .9s cubic-bezier(.2,.8,.2,1),opacity .65s ease;
+}
+.reveal-clip.is-visible{
+  clip-path:inset(0);
+  opacity:1;
+}
+
+/* The first service block sits directly under the page hero: always render it. */
+.service-feature-live{
+  clip-path:none!important;
+  opacity:1!important;
+  transform:none!important;
+}
+.page-hero + .section{
+  padding-top:34px;
+  padding-bottom:68px;
+}
+
+/* Stronger hero contrast and a yellow title accent. */
+.page-title{
+  position:relative;
+  display:inline-block;
+  z-index:0;
+  color:#073957;
+  text-shadow:0 2px 0 rgba(255,255,255,.2);
+}
+.page-title::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:8%;
+  bottom:.04em;
+  height:.13em;
+  background:var(--yellow);
+  border-radius:999px;
+  z-index:-1;
+  opacity:.95;
+}
+.page-intro{
+  display:table;
+  margin-top:8px;
+  padding:9px 14px;
+  background:rgba(255,255,255,.66);
+  border-left:4px solid var(--yellow);
+  color:#123d56!important;
+  box-shadow:0 10px 30px rgba(7,62,98,.06);
+}
+
+/* Accent headings: yellow label + underline, while keeping the copy dark enough. */
+.section-index{
+  width:max-content;
+  max-width:100%;
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(255,216,76,.94);
+  color:#073957!important;
+  letter-spacing:.14em;
+}
+.section-index::after{display:none}
+.section-title{
+  color:#073957;
+  text-decoration-line:underline;
+  text-decoration-color:rgba(255,216,76,.95);
+  text-decoration-thickness:.13em;
+  text-underline-offset:.09em;
+  text-decoration-skip-ink:none;
+}
+.section-lead{
+  padding:16px 18px;
+  background:rgba(255,255,255,.82);
+  border-left:4px solid var(--yellow);
+  color:#23485d;
+  box-shadow:0 12px 34px rgba(7,62,98,.06);
+}
+
+/* Keep card copy away from similarly colored backgrounds. */
+.service-item{
+  padding:26px 24px 24px;
+  border:1px solid rgba(255,255,255,.68);
+  border-top:5px solid var(--yellow);
+  background:rgba(255,255,255,.88);
+  box-shadow:0 16px 38px rgba(7,62,98,.08);
+}
+.service-item .num{color:#0a5682}
+.service-item h3{color:#073957}
+.service-item p{color:#315365}
+
+.company-statement,
+.fan-message > div{
+  padding:28px;
+  background:rgba(255,255,255,.82);
+  border-top:5px solid var(--yellow);
+  box-shadow:0 16px 38px rgba(7,62,98,.07);
+}
+.company-statement p,
+.fan-message-text{color:#315365}
+
+/* Improve the aqua hero accents which previously blended into the background. */
+.hero-line .highlight,
+.fan-hero-copy h1 span{
+  color:#fff;
+  text-shadow:0 2px 12px rgba(4,55,87,.28);
+}
+.home-hero .hero-description,
+.fan-hero .fan-hero-copy p{
+  padding:12px 15px;
+  background:rgba(255,255,255,.64);
+  border-left:4px solid var(--yellow);
+  color:#143f58!important;
+}
+
+/* Glass backing for text-only panels on the gradient. */
+.text-stack{
+  padding:28px 30px;
+  background:rgba(255,255,255,.80);
+  border-left:5px solid var(--yellow);
+  box-shadow:0 16px 38px rgba(7,62,98,.07);
+}
+.text-stack p{color:#315365}
+.fact-list{border-color:rgba(7,62,98,.18)}
+.fact-list li{border-color:rgba(7,62,98,.15)}
+
+/* Service feature: compact, immediate and high-contrast. */
+.service-feature{
+  min-height:390px;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 22px 54px rgba(5,48,77,.18);
+}
+.service-feature-media{min-height:390px}
+.service-feature-copy{padding:46px}
+.service-feature-copy h2{
+  color:#fff;
+  text-decoration-line:underline;
+  text-decoration-color:var(--yellow);
+  text-decoration-thickness:.11em;
+  text-underline-offset:.11em;
+  text-decoration-skip-ink:none;
+}
+.service-feature-copy p{color:#dceef5}
+
+/* Slightly stronger card separation on gradient sections. */
+.flow-item,
+.contact-card,
+.fan-teaser,
+.map-box,
+.data-table{
+  box-shadow:0 16px 38px rgba(7,62,98,.07);
+}
+.data-table{
+  background:rgba(255,255,255,.82);
+}
+.data-table th,.data-table td{padding-left:18px;padding-right:18px}
+
+@media(max-width:980px){
+  .page-hero + .section{padding-top:28px;padding-bottom:56px}
+  .service-feature{min-height:auto}
+  .service-feature-media{min-height:330px}
+  .company-statement,.fan-message > div{padding:24px}
+  .text-stack{padding:24px}
+}
+
+@media(max-width:640px){
+  .page-hero + .section{padding-top:22px;padding-bottom:44px}
+  .page-intro{padding:8px 11px}
+  .section-lead{padding:14px 14px}
+  .service-feature{border-radius:12px}
+  .service-feature-media{min-height:260px}
+  .service-feature-copy{padding:28px 22px}
+  .service-item{padding:22px 18px 20px}
+  .company-statement,.fan-message > div{padding:20px}
+  .text-stack{padding:20px}
+}
+
+
+/* =========================================================
+   Photo archive visibility / final customer-facing refinement
+   ========================================================= */
+#gallery{
+  padding-top:72px;
+  padding-bottom:82px;
+}
+#gallery .section-head{
+  margin-bottom:32px;
+}
+#gallery .gallery-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr) minmax(0,.92fr);
+  grid-template-rows:300px 300px;
+  gap:18px;
+  width:100%;
+  min-height:618px;
+}
+#gallery .gallery-item{
+  display:block;
+  position:relative;
+  margin:0;
+  overflow:hidden;
+  min-width:0;
+  min-height:0;
+  background:#fff;
+  border:1px solid rgba(7,62,98,.10);
+  box-shadow:0 18px 42px rgba(7,62,98,.10);
+  clip-path:none!important;
+  opacity:1!important;
+  transform:none!important;
+  visibility:visible!important;
+}
+#gallery .gallery-item:first-child{grid-row:1/3}
+#gallery .gallery-item:nth-child(4){grid-column:2/4}
+#gallery .gallery-item img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none;
+  object-fit:cover;
+  object-position:center;
+  opacity:1!important;
+  visibility:visible!important;
+  clip-path:none!important;
+}
+#gallery .gallery-item:nth-child(1) img{object-position:center 18%}
+#gallery .gallery-item:nth-child(2) img{object-fit:contain;background:#f5eef9;padding:16px}
+#gallery .gallery-item:nth-child(3) img{object-fit:contain;background:#fff8da;padding:12px}
+#gallery .gallery-item:nth-child(4) img{object-position:center 35%}
+#gallery .gallery-label{
+  z-index:2;
+  background:rgba(5,57,92,.92);
+  border-top:3px solid var(--yellow);
+}
+
+@media(max-width:980px){
+  #gallery{padding-top:58px;padding-bottom:66px}
+  #gallery .gallery-grid{
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:340px 300px 310px;
+    min-height:auto;
+  }
+  #gallery .gallery-item:first-child{grid-row:auto}
+  #gallery .gallery-item:nth-child(4){grid-column:1/3}
+}
+@media(max-width:640px){
+  #gallery{padding-top:46px;padding-bottom:54px}
+  #gallery .gallery-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:none;
+    gap:14px;
+  }
+  #gallery .gallery-item,
+  #gallery .gallery-item:first-child,
+  #gallery .gallery-item:nth-child(4){
+    grid-column:auto;
+    grid-row:auto;
+    height:320px;
+  }
+  #gallery .gallery-item:nth-child(2){height:390px}
+  #gallery .gallery-item:nth-child(3){height:410px}
+}
