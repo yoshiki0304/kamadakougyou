@@ -28,3 +28,18 @@ Repository > Settings > Pages > Source で `Deploy from a branch` を選択し�
 - JS読込が遅れても主要コンテンツが消えないよう表示方式を改善
 - 水色グラデーション上の文字に黄色・白のアクセントを追加
 - 見出し、説明文、サービスカードのコントラストを強化
+
+## TOPメインビジュアル動画
+- `assets/video/kamada-top-pc.mp4`：PC用
+- `assets/video/kamada-top-mobile.mp4`：スマートフォン向け軽量版
+- `assets/video/kamada-top-poster.webp` / `.jpg`：読み込み前・動画非対応時の代替画像
+
+自動再生・ミュート・ループ・インライン再生に設定し、画面右下の `PAUSE / PLAY` で停止・再生できます。
+
+
+## TOP動画（PC / スマホ）
+- PC（768px以上）: `assets/video/kamada-top-pc.mp4`（1920×1080）
+- スマホ（767px以下）: `assets/video/kamada-top-mobile.mp4`（720×1280）
+- スマホ用フォールバック画像: `assets/video/kamada-top-poster-mobile.webp`
+- `autoplay muted loop playsinline` を設定済みです。
+- スマホでは縦型動画に合わせてメインビジュアルを9:16で表示します。

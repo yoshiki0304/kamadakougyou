@@ -93,3 +93,31 @@
     });
   }
 })();
+
+(() => {
+  const heroVideo = document.querySelector('.hero-video');
+  const heroVideoToggle = document.querySelector('.hero-video-toggle');
+  if (!heroVideo || !heroVideoToggle) return;
+
+  const icon = heroVideoToggle.querySelector('.hero-video-toggle-icon');
+  const label = heroVideoToggle.querySelector('.hero-video-toggle-text');
+
+  const syncVideoButton = () => {
+    const paused = heroVideo.paused;
+    heroVideoToggle.setAttribute('aria-pressed', String(paused));
+    heroVideoToggle.setAttribute('aria-label', paused ? 'メインビジュアル動画を再生' : 'メインビジュアル動画を一時停止');
+    if (icon) icon.textContent = paused ? '▶' : 'Ⅱ';
+    if (label) label.textContent = paused ? 'PLAY' : 'PAUSE';
+  };
+
+  heroVideoToggle.addEventListener('click', () => {
+    if (heroVideo.paused) {
+      heroVideo.play().catch(() => {});
+    } else {
+      heroVideo.pause();
+    }
+  });
+  heroVideo.addEventListener('play', syncVideoButton);
+  heroVideo.addEventListener('pause', syncVideoButton);
+  syncVideoButton();
+})();
