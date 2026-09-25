@@ -1,5 +1,156 @@
 (() => {
   const body = document.body;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------------------------------------------------
+     Logo page transition
+     --------------------------------------------------------- */
+  const transition = document.createElement('div');
+  transition.className = 'page-transition';
+  transition.setAttribute('aria-hidden', 'true');
+  transition.innerHTML = `
+    <div class="page-transition-inner">
+      <div class="page-transition-mark"><img src="assets/img/kamada-logo.png" alt=""></div>
+      <p class="page-transition-name">KAMADA KOGYO CO., LTD.</p>
+      <div class="page-transition-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>`;
+  body.appendChild(transition);
+
+  let navigating = false;
+  const showTransition = (href) => {
+    if (navigating) return;
+    navigating = true;
+    body.classList.add('is-page-leaving');
+    transition.classList.add('is-active');
+    transition.setAttribute('aria-hidden', 'false');
+
+    // Keep the transition visible long enough to register as a deliberate page change.
+    const delay = reduceMotion ? 80 : 660;
+    window.setTimeout(() => { window.location.href = href; }, delay);
+  };
+
+  document.addEventListener('click', (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target.closest('a[href]');
+    if (!link || link.hasAttribute('download') || link.target === '_blank') return;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
+
+    let url;
+    try { url = new URL(link.href, window.location.href); } catch (_) { return; }
+    if (url.origin !== window.location.origin) return;
+    if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
+
+    event.preventDefault();
+    document.querySelector('.menu-btn')?.classList.remove('active');
+    document.querySelector('.nav')?.classList.remove('open');
+    body.classList.remove('nav-open');
+    showTransition(url.href);
+  });
+
+  window.addEventListener('pageshow', () => {
+    navigating = false;
+    body.classList.remove('is-page-leaving');
+    transition.classList.remove('is-active');
+    transition.setAttribute('aria-hidden', 'true');
+  });
+
+  /* ---------------------------------------------------------
+     Site-wide text motion
+     --------------------------------------------------------- */
+  const headingSelector = [
+    '.page-title',
+    '.section-title',
+    '.fan-hero-copy h1',
+    '.fan-teaser-copy h2',
+    '.cta-inner h2',
+    '.company-statement h2',
+    '.service-feature-copy h2',
+    '.service-card h3',
+    '.service-item h3',
+    '.flow-item h3',
+    '.contact-side h2',
+    '.contact-card h2',
+    '.fan-message h2',
+    '.fan-note h2'
+  ].join(',');
+
+  const splitHeading = (el) => {
+    if (!el || el.dataset.motionSplit === 'true') return;
+    el.dataset.motionSplit = 'true';
+    el.classList.add('motion-heading');
+
+    let charIndex = 0;
+    const walk = (node) => {
+      [...node.childNodes].forEach((child) => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const text = child.nodeValue || '';
+          if (!text.trim()) return;
+          const frag = document.createDocumentFragment();
+          [...text].forEach((char) => {
+            if (/\s/.test(char)) {
+              frag.appendChild(document.createTextNode(char));
+              return;
+            }
+            const span = document.createElement('span');
+            span.className = 'motion-char';
+            span.textContent = char;
+            span.style.setProperty('--char-delay', `${Math.min(charIndex * 22, 420)}ms`);
+            span.setAttribute('aria-hidden', 'true');
+            frag.appendChild(span);
+            charIndex += 1;
+          });
+          child.replaceWith(frag);
+        } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== 'BR') {
+          walk(child);
+        }
+      });
+    };
+
+    const accessibleLabel = el.textContent.replace(/\s+/g, ' ').trim();
+    if (accessibleLabel) el.setAttribute('aria-label', accessibleLabel);
+    walk(el);
+  };
+
+  document.querySelectorAll(headingSelector).forEach(splitHeading);
+
+  const addMotionClass = (selector, className) => {
+    document.querySelectorAll(selector).forEach((el, index) => {
+      if (el.closest('.page-transition')) return;
+      el.classList.add(className);
+      el.style.setProperty('--motion-delay', `${Math.min((index % 4) * 70, 210)}ms`);
+    });
+  };
+
+  addMotionClass('.page-kicker,.kicker,.section-index,.service-no,.photo-tag,.num,.gallery-label', 'motion-label');
+  addMotionClass('.page-intro,.section-lead,.hero-video-copy p,.text-stack p,.company-statement p,.service-feature-copy p,.service-card p,.service-item p,.flow-item p,.fan-hero-copy p,.fan-message-text p,.fan-note p,.contact-side p,.contact-card .note,.cta-inner p,.footer-address', 'motion-copy');
+  addMotionClass('.fact-list li,.contact-direct,.data-table tr,.footer-links a', 'motion-card-text');
+
+  const motionEls = [...document.querySelectorAll('.motion-heading,.motion-copy,.motion-label,.motion-card-text')];
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    motionEls.forEach((el) => el.classList.add('motion-visible'));
+  } else {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('motion-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -5% 0px' });
+    motionEls.forEach((el) => observer.observe(el));
+
+    // Safety fallback: never leave copy invisible because of a browser observer quirk.
+    window.setTimeout(() => {
+      motionEls.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 1.15) el.classList.add('motion-visible');
+      });
+    }, 1100);
+  }
+})();
+
+(() => {
+  const body = document.body;
   requestAnimationFrame(() => body.classList.add('loaded'));
 
   const header = document.querySelector('.site-header');
@@ -13,8 +164,23 @@
     menuBtn.classList.remove('active');
     nav.classList.remove('open');
     menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.setAttribute('aria-label', 'メニューを開く');
     body.classList.remove('nav-open');
   };
+
+  // Place the mobile menu directly under <body>. This prevents iOS Safari
+  // from trapping a fixed menu inside the header's backdrop-filter layer.
+  const navHome = nav?.parentNode;
+  const navAfter = nav?.nextSibling;
+  const navBreakpoint = window.matchMedia('(max-width: 980px)');
+  const placeMenu = () => {
+    if (!nav || !navHome) return;
+    if (navBreakpoint.matches && nav.parentNode !== body) body.appendChild(nav);
+    if (!navBreakpoint.matches && nav.parentNode !== navHome) navHome.insertBefore(nav, navAfter);
+    if (!navBreakpoint.matches) closeMenu();
+  };
+  placeMenu();
+  navBreakpoint.addEventListener?.('change', placeMenu);
 
   if (menuBtn && nav) {
     menuBtn.addEventListener('click', () => {
@@ -22,9 +188,11 @@
       menuBtn.classList.toggle('active', opening);
       nav.classList.toggle('open', opening);
       menuBtn.setAttribute('aria-expanded', String(opening));
+      menuBtn.setAttribute('aria-label', opening ? 'メニューを閉じる' : 'メニューを開く');
       body.classList.toggle('nav-open', opening);
     });
     nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
     window.addEventListener('resize', () => { if (window.innerWidth > 980) closeMenu(); });
   }
 
