@@ -95,75 +95,79 @@
 })();
 
 (() => {
-  const heroVideo = document.querySelector('.hero-video');
+  const pcVideo = document.querySelector('.hero-video-pc');
+  const mobileVideo = document.querySelector('.hero-video-mobile');
   const heroVideoToggle = document.querySelector('.hero-video-toggle');
-  if (!heroVideo) return;
+  if (!pcVideo && !mobileVideo) return;
 
-  // iPhone / Android を含め、CSSや <source media> 任せにせず
-  // 画面幅に応じて再生ファイルを明示的に切り替える。
   const mobileQuery = window.matchMedia('(max-width: 767px)');
-  let activeKind = '';
+  const activeVideo = () => mobileQuery.matches ? mobileVideo : pcVideo;
+  const inactiveVideo = () => mobileQuery.matches ? pcVideo : mobileVideo;
 
-  const applyResponsiveVideo = (force = false) => {
-    const kind = mobileQuery.matches ? 'mobile' : 'pc';
-    if (!force && activeKind === kind) return;
-
-    const source = kind === 'mobile' ? heroVideo.dataset.mobileSrc : heroVideo.dataset.pcSrc;
-    const poster = kind === 'mobile' ? heroVideo.dataset.mobilePoster : heroVideo.dataset.pcPoster;
-    if (!source) return;
-
-    activeKind = kind;
-    if (poster) heroVideo.poster = poster;
-
-    // 属性とプロパティの両方を指定し、iOS Safari の自動再生条件を満たす。
-    heroVideo.muted = true;
-    heroVideo.defaultMuted = true;
-    heroVideo.autoplay = true;
-    heroVideo.loop = true;
-    heroVideo.playsInline = true;
-    heroVideo.setAttribute('muted', '');
-    heroVideo.setAttribute('autoplay', '');
-    heroVideo.setAttribute('loop', '');
-    heroVideo.setAttribute('playsinline', '');
-    heroVideo.setAttribute('webkit-playsinline', '');
-
-    const resolved = new URL(source, window.location.href).href;
-    if (heroVideo.currentSrc !== resolved && heroVideo.src !== resolved) {
-      heroVideo.src = source;
-      heroVideo.load();
-    }
-
-    const tryPlay = () => heroVideo.play().catch(() => {});
-    if (heroVideo.readyState >= 2) tryPlay();
-    else heroVideo.addEventListener('canplay', tryPlay, { once: true });
+  const prepare = (video) => {
+    if (!video) return;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.autoplay = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('autoplay', '');
+    video.setAttribute('loop', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
   };
 
-  applyResponsiveVideo(true);
-  if (typeof mobileQuery.addEventListener === 'function') {
-    mobileQuery.addEventListener('change', () => applyResponsiveVideo(true));
-  } else if (typeof mobileQuery.addListener === 'function') {
-    mobileQuery.addListener(() => applyResponsiveVideo(true));
-  }
-  window.addEventListener('orientationchange', () => setTimeout(() => applyResponsiveVideo(true), 120));
-
-  if (!heroVideoToggle) return;
-  const icon = heroVideoToggle.querySelector('.hero-video-toggle-icon');
-  const label = heroVideoToggle.querySelector('.hero-video-toggle-text');
+  prepare(pcVideo);
+  prepare(mobileVideo);
 
   const syncVideoButton = () => {
-    const paused = heroVideo.paused;
+    if (!heroVideoToggle) return;
+    const video = activeVideo();
+    if (!video) return;
+    const icon = heroVideoToggle.querySelector('.hero-video-toggle-icon');
+    const label = heroVideoToggle.querySelector('.hero-video-toggle-text');
+    const paused = video.paused;
     heroVideoToggle.setAttribute('aria-pressed', String(paused));
     heroVideoToggle.setAttribute('aria-label', paused ? 'メインビジュアル動画を再生' : 'メインビジュアル動画を一時停止');
     if (icon) icon.textContent = paused ? '▶' : 'Ⅱ';
     if (label) label.textContent = paused ? 'PLAY' : 'PAUSE';
   };
 
-  heroVideoToggle.addEventListener('click', () => {
-    if (heroVideo.paused) heroVideo.play().catch(() => {});
-    else heroVideo.pause();
+  const activateCorrectVideo = () => {
+    const active = activeVideo();
+    const inactive = inactiveVideo();
+    if (inactive && !inactive.paused) inactive.pause();
+    if (!active) return;
+    prepare(active);
+    const tryPlay = () => active.play().then(syncVideoButton).catch(syncVideoButton);
+    if (active.readyState >= 2) tryPlay();
+    else active.addEventListener('canplay', tryPlay, { once: true });
+    syncVideoButton();
+  };
+
+  activateCorrectVideo();
+  if (typeof mobileQuery.addEventListener === 'function') {
+    mobileQuery.addEventListener('change', activateCorrectVideo);
+  } else if (typeof mobileQuery.addListener === 'function') {
+    mobileQuery.addListener(activateCorrectVideo);
+  }
+  window.addEventListener('orientationchange', () => setTimeout(activateCorrectVideo, 120));
+
+  if (heroVideoToggle) {
+    heroVideoToggle.addEventListener('click', () => {
+      const video = activeVideo();
+      if (!video) return;
+      if (video.paused) video.play().catch(() => {});
+      else video.pause();
+      setTimeout(syncVideoButton, 0);
+    });
+  }
+
+  [pcVideo, mobileVideo].forEach((video) => {
+    if (!video) return;
+    video.addEventListener('play', syncVideoButton);
+    video.addEventListener('pause', syncVideoButton);
+    video.addEventListener('loadeddata', syncVideoButton);
   });
-  heroVideo.addEventListener('play', syncVideoButton);
-  heroVideo.addEventListener('pause', syncVideoButton);
-  heroVideo.addEventListener('loadeddata', syncVideoButton);
-  syncVideoButton();
 })();

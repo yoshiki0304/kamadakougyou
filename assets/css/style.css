@@ -836,3 +836,32 @@ main{
     object-position:center center;
   }
 }
+
+
+/* =========================================================
+   Definitive TOP video split: PC / smartphone
+   The mobile video is a separate element so iOS Safari cannot retain the PC source.
+   ========================================================= */
+.hero-video-pc{display:block!important}
+.hero-video-mobile{display:none!important}
+
+@media(max-width:767px){
+  .hero-video-stage{
+    aspect-ratio:9/16!important;
+    min-height:0!important;
+    max-height:none!important;
+    background:#6fcff1 url("../video/kamada-top-poster-mobile-exact-20260925.webp") center center/contain no-repeat!important;
+  }
+  .hero-video-pc{display:none!important}
+  .hero-video-mobile{
+    display:block!important;
+    object-fit:contain!important;
+    object-position:center center!important;
+    background:#6fcff1;
+  }
+}
+
+@media(min-width:768px){
+  .hero-video-pc{display:block!important}
+  .hero-video-mobile{display:none!important}
+}

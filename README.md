@@ -48,3 +48,8 @@ Repository > Settings > Pages > Source で `Deploy from a branch` を選択し�
 - 画面幅768px以上: `assets/video/kamada-top-pc.mp4`
 - 画面幅767px以下: `assets/video/kamada-top-mobile-v2.mp4`
 - JavaScriptで動画の`src`を明示的に切り替えるため、スマートフォンでもPC版動画が残る問題を回避しています。
+
+## スマートフォン用TOP動画（2026-09-25修正版）
+スマートフォンでは、ユーザー提供の `kamada-top-video-webset-complete.zip` 内にある
+1080×1920版をそのまま `assets/video/kamada-top-mobile-exact-20260925.mp4` として使用しています。
+PC用動画とは別の `<video>` 要素で実装しており、767px以下ではスマートフォン用だけを表示します。
