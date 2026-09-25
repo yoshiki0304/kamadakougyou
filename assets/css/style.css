@@ -817,7 +817,6 @@ main{
   .hero-video-actions .btn{width:100%;min-height:48px}
 }
 @media(prefers-reduced-motion:reduce){
-  .hero-video{display:none}
   .hero-video-toggle{display:none}
 }
 
@@ -830,7 +829,7 @@ main{
     aspect-ratio:9/16!important;
     min-height:0!important;
     max-height:none!important;
-    background:#6fcff1 url("../video/kamada-top-poster-mobile.webp") center center/cover no-repeat!important;
+    background:#6fcff1 url("../video/kamada-top-poster-mobile-v2.webp") center center/cover no-repeat!important;
   }
   .hero-video{
     object-fit:cover;

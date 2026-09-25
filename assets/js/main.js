@@ -97,8 +97,56 @@
 (() => {
   const heroVideo = document.querySelector('.hero-video');
   const heroVideoToggle = document.querySelector('.hero-video-toggle');
-  if (!heroVideo || !heroVideoToggle) return;
+  if (!heroVideo) return;
 
+  // iPhone / Android を含め、CSSや <source media> 任せにせず
+  // 画面幅に応じて再生ファイルを明示的に切り替える。
+  const mobileQuery = window.matchMedia('(max-width: 767px)');
+  let activeKind = '';
+
+  const applyResponsiveVideo = (force = false) => {
+    const kind = mobileQuery.matches ? 'mobile' : 'pc';
+    if (!force && activeKind === kind) return;
+
+    const source = kind === 'mobile' ? heroVideo.dataset.mobileSrc : heroVideo.dataset.pcSrc;
+    const poster = kind === 'mobile' ? heroVideo.dataset.mobilePoster : heroVideo.dataset.pcPoster;
+    if (!source) return;
+
+    activeKind = kind;
+    if (poster) heroVideo.poster = poster;
+
+    // 属性とプロパティの両方を指定し、iOS Safari の自動再生条件を満たす。
+    heroVideo.muted = true;
+    heroVideo.defaultMuted = true;
+    heroVideo.autoplay = true;
+    heroVideo.loop = true;
+    heroVideo.playsInline = true;
+    heroVideo.setAttribute('muted', '');
+    heroVideo.setAttribute('autoplay', '');
+    heroVideo.setAttribute('loop', '');
+    heroVideo.setAttribute('playsinline', '');
+    heroVideo.setAttribute('webkit-playsinline', '');
+
+    const resolved = new URL(source, window.location.href).href;
+    if (heroVideo.currentSrc !== resolved && heroVideo.src !== resolved) {
+      heroVideo.src = source;
+      heroVideo.load();
+    }
+
+    const tryPlay = () => heroVideo.play().catch(() => {});
+    if (heroVideo.readyState >= 2) tryPlay();
+    else heroVideo.addEventListener('canplay', tryPlay, { once: true });
+  };
+
+  applyResponsiveVideo(true);
+  if (typeof mobileQuery.addEventListener === 'function') {
+    mobileQuery.addEventListener('change', () => applyResponsiveVideo(true));
+  } else if (typeof mobileQuery.addListener === 'function') {
+    mobileQuery.addListener(() => applyResponsiveVideo(true));
+  }
+  window.addEventListener('orientationchange', () => setTimeout(() => applyResponsiveVideo(true), 120));
+
+  if (!heroVideoToggle) return;
   const icon = heroVideoToggle.querySelector('.hero-video-toggle-icon');
   const label = heroVideoToggle.querySelector('.hero-video-toggle-text');
 
@@ -111,13 +159,11 @@
   };
 
   heroVideoToggle.addEventListener('click', () => {
-    if (heroVideo.paused) {
-      heroVideo.play().catch(() => {});
-    } else {
-      heroVideo.pause();
-    }
+    if (heroVideo.paused) heroVideo.play().catch(() => {});
+    else heroVideo.pause();
   });
   heroVideo.addEventListener('play', syncVideoButton);
   heroVideo.addEventListener('pause', syncVideoButton);
+  heroVideo.addEventListener('loadeddata', syncVideoButton);
   syncVideoButton();
 })();

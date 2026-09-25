@@ -17,10 +17,13 @@
 <main id="main">
 <section class="home-hero home-hero-video" aria-label="メインビジュアル">
   <div class="hero-video-stage">
-    <video class="hero-video" autoplay muted loop playsinline preload="metadata" aria-label="鎌田工業株式会社 メインビジュアル動画">
-      <source src="assets/video/kamada-top-mobile.mp4" media="(max-width: 767px)" type="video/mp4">
-      <source src="assets/video/kamada-top-pc.mp4" type="video/mp4">
-    </video>
+    <video class="hero-video" autoplay muted loop playsinline webkit-playsinline preload="auto"
+      poster="assets/video/kamada-top-poster.webp"
+      data-pc-src="assets/video/kamada-top-pc.mp4"
+      data-mobile-src="assets/video/kamada-top-mobile-v2.mp4"
+      data-pc-poster="assets/video/kamada-top-poster.webp"
+      data-mobile-poster="assets/video/kamada-top-poster-mobile-v2.webp"
+      aria-label="鎌田工業株式会社 メインビジュアル動画"></video>
     <div class="hero-video-overlay" aria-hidden="true"></div>
     <div class="container hero-video-controls">
       <button class="hero-video-toggle" type="button" aria-label="メインビジュアル動画を一時停止" aria-pressed="false">

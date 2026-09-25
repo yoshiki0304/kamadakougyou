@@ -43,3 +43,8 @@ Repository > Settings > Pages > Source で `Deploy from a branch` を選択し�
 - スマホ用フォールバック画像: `assets/video/kamada-top-poster-mobile.webp`
 - `autoplay muted loop playsinline` を設定済みです。
 - スマホでは縦型動画に合わせてメインビジュアルを9:16で表示します。
+
+## TOP動画の切り替え
+- 画面幅768px以上: `assets/video/kamada-top-pc.mp4`
+- 画面幅767px以下: `assets/video/kamada-top-mobile-v2.mp4`
+- JavaScriptで動画の`src`を明示的に切り替えるため、スマートフォンでもPC版動画が残る問題を回避しています。
