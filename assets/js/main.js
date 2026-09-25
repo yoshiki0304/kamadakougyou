@@ -78,38 +78,11 @@
   const splitHeading = (el) => {
     if (!el || el.dataset.motionSplit === 'true') return;
     el.dataset.motionSplit = 'true';
+    // Animate the heading as a single typographic block instead of splitting
+    // Japanese text into individual inline-block characters. Character-level
+    // splitting creates invalid Japanese line breaks (e.g. punctuation or a
+    // final kana stranded on its own line), especially on narrow screens.
     el.classList.add('motion-heading');
-
-    let charIndex = 0;
-    const walk = (node) => {
-      [...node.childNodes].forEach((child) => {
-        if (child.nodeType === Node.TEXT_NODE) {
-          const text = child.nodeValue || '';
-          if (!text.trim()) return;
-          const frag = document.createDocumentFragment();
-          [...text].forEach((char) => {
-            if (/\s/.test(char)) {
-              frag.appendChild(document.createTextNode(char));
-              return;
-            }
-            const span = document.createElement('span');
-            span.className = 'motion-char';
-            span.textContent = char;
-            span.style.setProperty('--char-delay', `${Math.min(charIndex * 22, 420)}ms`);
-            span.setAttribute('aria-hidden', 'true');
-            frag.appendChild(span);
-            charIndex += 1;
-          });
-          child.replaceWith(frag);
-        } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== 'BR') {
-          walk(child);
-        }
-      });
-    };
-
-    const accessibleLabel = el.textContent.replace(/\s+/g, ' ').trim();
-    if (accessibleLabel) el.setAttribute('aria-label', accessibleLabel);
-    walk(el);
   };
 
   document.querySelectorAll(headingSelector).forEach(splitHeading);

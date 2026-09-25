@@ -916,23 +916,26 @@ main{
    when JavaScript is unavailable. */
 .motion-heading{
   position:relative;
-}
-.motion-heading .motion-char{
-  display:inline-block;
   opacity:0;
-  transform:translate3d(0,.85em,0) rotate(1.5deg);
-  filter:blur(5px);
+  transform:translate3d(0,.42em,0);
+  filter:blur(4px);
+  clip-path:inset(0 0 26% 0);
   transition:
-    transform .72s cubic-bezier(.16,.76,.22,1),
+    transform .74s cubic-bezier(.16,.76,.22,1),
     opacity .58s ease,
-    filter .58s ease;
-  transition-delay:var(--char-delay,0ms);
-  will-change:transform,opacity,filter;
+    filter .58s ease,
+    clip-path .78s cubic-bezier(.16,.76,.22,1);
+  will-change:transform,opacity,filter,clip-path;
+  line-break:strict;
+  word-break:normal;
+  overflow-wrap:normal;
+  text-wrap:balance;
 }
-.motion-heading.motion-visible .motion-char{
+.motion-heading.motion-visible{
   opacity:1;
-  transform:translate3d(0,0,0) rotate(0);
+  transform:translate3d(0,0,0);
   filter:blur(0);
+  clip-path:inset(0 0 0 0);
 }
 
 .motion-copy,
@@ -958,6 +961,17 @@ main{
   opacity:1;
   transform:translate3d(0,0,0);
 }
+
+
+/* Japanese heading line-break control: preserve punctuation and semantic phrases. */
+h1,h2,h3{
+  line-break:strict;
+  word-break:normal;
+  overflow-wrap:normal;
+}
+.fan-hero-copy h1 > span{display:inline-block;white-space:nowrap}
+.heading-line{display:inline-block;white-space:nowrap;max-width:100%}
+.heading-unit{display:inline-block;white-space:nowrap}
 
 /* A small yellow sweep accents major headings as they enter. */
 .motion-heading::after{
@@ -1121,14 +1135,14 @@ body.is-page-leaving .site-footer{
 }
 
 @media(max-width:640px){
-  .motion-heading .motion-char{transition-duration:.58s}
+  .motion-heading{transition-duration:.58s}
   .motion-heading::after{height:4px;margin-top:9px}
   .page-transition-mark{width:104px}
   .page-transition-name{font-size:9px;letter-spacing:.23em;text-indent:.23em}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .motion-heading .motion-char,
+  .motion-heading,
   .motion-copy,
   .motion-label,
   .motion-card-text{
